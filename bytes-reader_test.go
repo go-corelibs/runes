@@ -278,6 +278,7 @@ func TestBytesReaderReset(t *testing.T) {
 	}
 }
 
+//gocyclo:ignore
 func TestBytesReaderZero(t *testing.T) {
 	if l := (&BytesReader{}).Len(); l != 0 {
 		t.Errorf("Len: got %d, want 0", l)

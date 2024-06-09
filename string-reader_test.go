@@ -191,6 +191,7 @@ func TestStringReaderReset(t *testing.T) {
 	}
 }
 
+//gocyclo:ignore
 func TestStringReaderZero(t *testing.T) {
 	if l := (&StringReader{}).Len(); l != 0 {
 		t.Errorf("Len: got %d, want 0", l)

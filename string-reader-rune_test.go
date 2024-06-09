@@ -11,6 +11,7 @@ import (
 	. "github.com/go-corelibs/runes"
 )
 
+//gocyclo:ignore
 func TestStringReader_ReadRuneAt(t *testing.T) {
 	r := &StringReader{}
 
@@ -36,6 +37,7 @@ func TestStringReader_ReadRuneAt(t *testing.T) {
 
 }
 
+//gocyclo:ignore
 func TestStringReader_ReadPrevRuneFrom(t *testing.T) {
 	r := &StringReader{}
 
@@ -65,6 +67,7 @@ func TestStringReader_ReadPrevRuneFrom(t *testing.T) {
 
 }
 
+//gocyclo:ignore
 func TestStringReader_ReadNextRuneFrom(t *testing.T) {
 	r := &StringReader{}
 
@@ -90,6 +93,7 @@ func TestStringReader_ReadNextRuneFrom(t *testing.T) {
 
 }
 
+//gocyclo:ignore
 func TestStringReader_ReadRuneSlice(t *testing.T) {
 	r := &StringReader{}
 
