@@ -7,7 +7,6 @@ package runes
 import (
 	"errors"
 	"io"
-	"slices"
 )
 
 // ReadRuneAt is a convenience method combining Seek and ReadRune into one
@@ -106,6 +105,5 @@ func (r *Reader) ReadRuneSlice(index, count int64) (slice []rune, size int, err 
 		size += 1
 		r.i += 1 // rune slice, not bytes
 	}
-	slices.Clip(slice)
 	return
 }

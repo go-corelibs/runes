@@ -17,7 +17,6 @@ package runes
 import (
 	"errors"
 	"io"
-	"slices"
 	"unicode/utf8"
 )
 
@@ -137,6 +136,5 @@ func (r *BytesReader) ReadRuneSlice(index, count int64) (slice []rune, size int,
 			r.i += int64(sz)
 		}
 	}
-	slices.Clip(slice)
 	return
 }
