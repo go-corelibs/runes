@@ -130,3 +130,59 @@ func (r *StringReader) ReadRuneSlice(index, count int64) (slice []rune, size int
 	}
 	return
 }
+
+func (r *StringReader) ReadByteSlice(index, count int64) (slice []byte, err error) {
+	r.prevRune = -1
+	if index < 0 {
+		return nil, errors.New("StringReader.ReadByteSlice: negative position")
+	} else if count < 1 {
+		return nil, errors.New("StringReader.ReadByteSlice: zero or negative count")
+	} else if index >= int64(len(r.s)) {
+		return nil, io.EOF
+	}
+	r.i = index
+
+	length := int64(len(r.s))
+
+	slice = make([]byte, count)
+	track := int64(0)
+	for idx := index; idx < length; {
+		if track == count {
+			break
+		}
+		r.prevRune = int(r.i)
+		slice[track] = r.s[r.i]
+		track += 1
+		r.i++
+	}
+	return
+}
+
+func (r *StringReader) ReadString(index, count int64) (slice string, err error) {
+	r.prevRune = -1
+	if index < 0 {
+		return "", errors.New("StringReader.ReadString: negative position")
+	} else if count < 1 {
+		return "", errors.New("StringReader.ReadString: zero or negative count")
+	} else if index >= int64(len(r.s)) {
+		return "", io.EOF
+	}
+	r.i = index
+
+	length := int64(len(r.s))
+
+	buf := spStringBuilder.Get()
+	track := int64(0)
+	for idx := index; idx < length; {
+		if track == count {
+			break
+		}
+		r.prevRune = int(r.i)
+		buf.WriteByte(r.s[r.i])
+		track += 1
+		r.i++
+	}
+	slice = buf.String()
+	spStringBuilder.Put(buf)
+	return
+}
