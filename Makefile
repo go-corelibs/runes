@@ -3,7 +3,7 @@
 CORELIB_PKG := go-corelibs/runes
 VERSION_TAGS += MAIN
 MAIN_MK_SUMMARY := ${CORELIB_PKG}
-MAIN_MK_VERSION := v1.0.1
+MAIN_MK_VERSION := v1.1.0
 
 DEPS += golang.org/x/perf/cmd/benchstat
 
