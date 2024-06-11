@@ -7,6 +7,7 @@ package runes
 import (
 	"errors"
 	"io"
+	"unicode/utf8"
 )
 
 // ReadRuneAt is a convenience method combining Seek and ReadRune into one
@@ -105,5 +106,60 @@ func (r *Reader) ReadRuneSlice(index, count int64) (slice []rune, size int, err 
 		size += 1
 		r.i += 1 // rune slice, not bytes
 	}
+	return
+}
+
+func (r *Reader) ReadByteSlice(index, count int64) (slice []byte, err error) {
+	r.prevRune = -1
+	if index < 0 {
+		return nil, errors.New("Reader.ReadByteSlice: negative position")
+	} else if count < 1 {
+		return nil, errors.New("Reader.ReadByteSlice: zero or negative count")
+	} else if index >= int64(len(r.s)) {
+		return nil, io.EOF
+	}
+	r.i = index
+
+	length := int64(len(r.s))
+
+	track := int64(0)
+	for idx := index; idx < length; {
+		if track == count {
+			break
+		}
+		r.prevRune = int(r.i)
+		slice = utf8.AppendRune(slice, r.s[r.i])
+		track += 1
+		r.i++
+	}
+	return
+}
+
+func (r *Reader) ReadString(index, count int64) (slice string, err error) {
+	r.prevRune = -1
+	if index < 0 {
+		return "", errors.New("Reader.ReadString: negative position")
+	} else if count < 1 {
+		return "", errors.New("Reader.ReadString: zero or negative count")
+	} else if index >= int64(len(r.s)) {
+		return "", io.EOF
+	}
+	r.i = index
+
+	length := int64(len(r.s))
+
+	buf := spStringBuilder.Get()
+	track := int64(0)
+	for idx := index; idx < length; {
+		if track == count {
+			break
+		}
+		r.prevRune = int(r.i)
+		buf.WriteRune(r.s[r.i])
+		track += 1
+		r.i++
+	}
+	slice = buf.String()
+	spStringBuilder.Put(buf)
 	return
 }
