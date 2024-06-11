@@ -136,3 +136,75 @@ func TestBytesReader_ReadRuneSlice(t *testing.T) {
 	}
 
 }
+
+//gocyclo:ignore
+func TestBytesReader_ReadByteSlice(t *testing.T) {
+	r := &BytesReader{}
+
+	if data, err := r.ReadByteSlice(-1, 0); data != nil || (err == nil || err.Error() != "BytesReader.ReadByteSlice: negative position") {
+		t.Errorf("ReadByteSlice: got %v, %v; want 0, 0, io.EOF", data, err)
+	}
+
+	if data, err := r.ReadByteSlice(0, 0); data != nil || (err == nil || err.Error() != "BytesReader.ReadByteSlice: zero or negative count") {
+		t.Errorf("ReadByteSlice: got %v, %v; want 0, 0, io.EOF", data, err)
+	}
+
+	if data, err := r.ReadByteSlice(0, 1); data != nil || err != io.EOF {
+		t.Errorf("ReadByteSlice: got %v, %v; want 0, 0, io.EOF", data, err)
+	}
+
+	r.Reset([]byte("stuff"))
+
+	if data, err := r.ReadByteSlice(2, 1); len(data) != 1 || data[0] != 'u' || err != nil {
+		t.Errorf("ReadByteSlice: got %v, %v; want 0, 0, io.EOF", data, err)
+	}
+
+	if data, err := r.ReadByteSlice(4, 1); len(data) != 1 || data[0] != 'f' || err != nil {
+		t.Errorf("ReadByteSlice: got %v, %v; want 0, 0, io.EOF", data, err)
+	}
+
+	r.Reset([]byte("日本語"))
+
+	if data, err := r.ReadByteSlice(0, 1); len(data) != 1 || data[0] != 230 /*'日'*/ || err != nil {
+		// TODO: should ReadByteSlice and ReadString operate on a rune count or leave this at a byte count?
+		//       because this allows for broken UTF-8 characters
+		t.Errorf("ReadByteSlice: got %v, %v; want 0, 0, io.EOF", data, err)
+	}
+
+}
+
+//gocyclo:ignore
+func TestBytesReader_ReadString(t *testing.T) {
+	r := &BytesReader{}
+
+	if data, err := r.ReadString(-1, 0); data != "" || (err == nil || err.Error() != "BytesReader.ReadString: negative position") {
+		t.Errorf("ReadString: got %q, %v; want 0, 0, io.EOF", data, err)
+	}
+
+	if data, err := r.ReadString(0, 0); data != "" || (err == nil || err.Error() != "BytesReader.ReadString: zero or negative count") {
+		t.Errorf("ReadString: got %q, %v; want 0, 0, io.EOF", data, err)
+	}
+
+	if data, err := r.ReadString(0, 1); data != "" || err != io.EOF {
+		t.Errorf("ReadString: got %q, %v; want 0, 0, io.EOF", data, err)
+	}
+
+	r.Reset([]byte("stuff"))
+
+	if data, err := r.ReadString(2, 1); len(data) != 1 || data[0] != 'u' || err != nil {
+		t.Errorf("ReadString: got %q, %v; want 0, 0, io.EOF", data, err)
+	}
+
+	if data, err := r.ReadString(4, 1); len(data) != 1 || data[0] != 'f' || err != nil {
+		t.Errorf("ReadString: got %q, %v; want 0, 0, io.EOF", data, err)
+	}
+
+	r.Reset([]byte("日本語"))
+
+	if data, err := r.ReadString(0, 1); len(data) != 1 || data[0] != 230 /*'日'*/ || err != nil {
+		// TODO: should ReadString and ReadString operate on a rune count or leave this at a byte count?
+		//       because this allows for broken UTF-8 characters
+		t.Errorf("ReadString: got %q, %v; want 0, 0, io.EOF", data, err)
+	}
+
+}
