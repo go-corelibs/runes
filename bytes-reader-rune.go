@@ -114,7 +114,7 @@ func (r *BytesReader) ReadRuneSlice(index, count int64) (slice []rune, size int,
 	}
 	r.i = index
 
-	length := int64(r.Len())
+	length := int64(len(r.s))
 
 	slice = make([]rune, count)
 	track := int64(0)

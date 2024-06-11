@@ -115,6 +115,10 @@ func TestRunesReader_ReadRuneSlice(t *testing.T) {
 		t.Errorf("ReadRuneSlice: got %d, %d, %v; want 0, 0, io.EOF", runes, size, err)
 	}
 
+	if runes, size, err := r.ReadRuneSlice(4, 1); len(runes) != 1 || runes[0] != 'f' || size != 1 || err != nil {
+		t.Errorf("ReadRuneSlice: got %d, %d, %v; want 0, 0, io.EOF", runes, size, err)
+	}
+
 	r.Reset([]rune{'日', '本', '語'})
 
 	if runes, size, err := r.ReadRuneSlice(0, 1); len(runes) != 1 || runes[0] != '日' || size != 1 || err != nil {
