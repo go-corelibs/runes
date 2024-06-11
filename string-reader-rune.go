@@ -111,8 +111,6 @@ func (r *StringReader) ReadRuneSlice(index, count int64) (slice []rune, size int
 	for idx := index; idx < length; {
 		if track == count {
 			break
-		} else if r.i >= length {
-			return nil, 0, io.EOF
 		}
 		r.prevRune = int(r.i)
 		if c := r.s[r.i]; c < utf8.RuneSelf {
