@@ -43,6 +43,12 @@ type RuneReader interface {
 	// underlying data type is just a slice of runes (no decoding of multi-bytes
 	// needed)
 	ReadRuneSlice(index, count int64) (slice []rune, size int, err error)
+
+	// ReadByteSlice is like ReadRuneSlice, but for byte slices
+	ReadByteSlice(index, count int64) (slice []byte, err error)
+
+	// ReadString is like ReadRuneSlice, but for a string
+	ReadString(index, count int64) (slice string, err error)
 }
 
 // NewRuneReader is a generic wrapper around constructing a NewBytesReader,
